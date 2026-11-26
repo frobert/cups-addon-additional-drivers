@@ -104,7 +104,7 @@ expect_contains "configured admin user is in the lpadmin group" "$groups" "lpadm
 # Each of these is either compiled from vendored source or shipped as a PPD in
 # rootfs/, so a broken COPY/build step shows up here rather than on a user's Pi.
 missing=""
-for filter in rastertokpsl raster2dymolw raster2dymolm rastertogutenprint.5.3 gstoraster; do
+for filter in rastertokpsl raster2dymolw raster2dymolm rastertogutenprint.5.3 gstoraster rastertoqpdl pstoqpdl; do
   server_exec "test -x /usr/lib/cups/filter/$filter" || missing="$missing $filter"
 done
 expect_eq "compiled CUPS filter binaries are present and executable" "$missing" ""
@@ -122,7 +122,16 @@ else
   bad "BJNP runtime dependencies are missing"
 fi
 
+# Check the SpliX (Samsung/Xerox/Dell SPL) filter links against its libraries.
+if server_exec 'ldd /usr/lib/cups/filter/rastertoqpdl >/dev/null 2>&1'; then
+  ok "SpliX runtime dependencies resolve"
+else
+  bad "SpliX runtime dependencies are missing"
+fi
+
 for ppd in \
+  /usr/share/cups/model/samsung/ml2240.ppd \
+  /usr/share/cups/model/dell/1100.ppd \
   /usr/share/cups/model/lw4xl.ppd \
   /usr/share/cups/model/lw450.ppd \
   /usr/share/cups/model/kyocera/Kyocera_FS-1040GDI.ppd \

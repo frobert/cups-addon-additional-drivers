@@ -147,6 +147,13 @@ Brother host-based (GDI) lasers that speak neither PCL nor PostScript (for
 example HL-2130, HL-2140, HL-1110, DCP-7030/7055) are covered by the bundled
 open-source brlaser driver: pick **Brother <model>, using brlaser**.
 
+Older Samsung, Xerox, Dell, Lexmark and Toshiba lasers that use the SPL/QPDL
+language (for example Samsung ML-1510, ML-1610, ML-2010, ML-2240, ML-2510, SCX-4200,
+Xerox Phaser 3117/3124, Dell 1100/1110) are covered by the bundled SpliX
+driver: pick the entry named after the model with SpliX's version, for example
+**Samsung ML-2240, 2.0.0**. The color Samsung CLP/CLX models need SpliX's
+JBIG support, which the Alpine package does not include.
+
 For printers Gutenprint does not cover, supply a `.deb` through
 `printer_driver_deb` (place the file in the app config folder, `/config`) or use
 a PPD from:

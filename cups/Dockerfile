@@ -12,6 +12,10 @@ ENV CUPS_SERVERROOT=/config
 # Gutenprint covers most printer models as a replacement.
 # Alpine splits this: `gutenprint` is libraries/tools only; `gutenprint-cups`
 # ships rastertogutenprint and the CUPS PPDs (Canon, HP, Brother, etc.).
+# `splix` adds the SPL/QPDL filters (rastertoqpdl, pstoqpdl) and PPDs for
+# older Samsung, Xerox, Dell, Lexmark and Toshiba host-based mono lasers that
+# speak neither PCL nor PostScript (e.g. Samsung ML-1510/ML-2010/ML-2240).
+# Alpine builds it without JBIG, so the color CLP/CLX models are not usable.
 RUN \
     echo "http://dl-cdn.alpinelinux.org/alpine/v$(cat /etc/alpine-release | cut -d'.' -f1,2)/main" > /etc/apk/repositories && \
     echo "http://dl-cdn.alpinelinux.org/alpine/v$(cat /etc/alpine-release | cut -d'.' -f1,2)/community" >> /etc/apk/repositories && \
@@ -25,6 +29,7 @@ RUN \
         epson-inkjet-printer-escpr \
         gutenprint \
         gutenprint-cups \
+        splix \
         avahi \
         dbus \
         gcompat \

@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.3.8] — 2026-11-26
+
+- Add the SpliX driver (Alpine `splix` package, 2.0.1) for older Samsung,
+  Xerox, Dell, Lexmark and Toshiba SPL/QPDL laser printers such as the Samsung
+  ML-1510/ML-1610/ML-2010/ML-2240, SCX-4200 and the Xerox Phaser 3117/3124.
+  These printers understand neither PCL nor PostScript and were not covered by
+  Gutenprint. Their models now appear in the add-printer list as, for example,
+  "Samsung ML-2240, 2.0.0".
+- Add smoke-test checks for the SpliX filters, their runtime dependencies and
+  sample PPDs.
+
 ## [1.3.7] — 2026-11-07
 
 - Add Canon BJNP network printing support using cups-bjnp 2.0.3.
