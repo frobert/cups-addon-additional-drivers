@@ -104,7 +104,7 @@ expect_contains "configured admin user is in the lpadmin group" "$groups" "lpadm
 # Each of these is either compiled from vendored source or shipped as a PPD in
 # rootfs/, so a broken COPY/build step shows up here rather than on a user's Pi.
 missing=""
-for filter in rastertokpsl raster2dymolw raster2dymolm rastertogutenprint.5.3 gstoraster rastertoqpdl pstoqpdl; do
+for filter in rastertokpsl raster2dymolw raster2dymolm rastertogutenprint.5.3 gstoraster rastertoqpdl pstoqpdl hpcups foomatic-rip; do
   server_exec "test -x /usr/lib/cups/filter/$filter" || missing="$missing $filter"
 done
 expect_eq "compiled CUPS filter binaries are present and executable" "$missing" ""
@@ -122,16 +122,46 @@ else
   bad "BJNP runtime dependencies are missing"
 fi
 
-# Check the SpliX (Samsung/Xerox/Dell SPL) filter links against its libraries.
+# Check the SpliX (Samsung/Xerox/Dell SPL) filter links against its libraries
+# and was built with JBIG, which the color CLP/CLX and QPDL v3 models need.
 if server_exec 'ldd /usr/lib/cups/filter/rastertoqpdl >/dev/null 2>&1'; then
   ok "SpliX runtime dependencies resolve"
 else
   bad "SpliX runtime dependencies are missing"
 fi
 
+splix_build="$(server_exec 'PPD=/usr/share/cups/model/samsung/clp300.ppd /usr/lib/cups/filter/rastertoqpdl 1 u t 1 "" </dev/null 2>&1 >/dev/null' || true)"
+expect_contains "SpliX is built with JBIG support" "$splix_build" "JBIG=enabled"
+
+# HPLIP: hpcups filter, hp backend and its runtime libraries.
+if server_exec 'test -x /usr/lib/cups/backend/hp && ldd /usr/lib/cups/filter/hpcups >/dev/null 2>&1'; then
+  ok "HPLIP hpcups filter and hp backend are usable"
+else
+  bad "HPLIP hpcups filter or hp backend is missing"
+fi
+
+# foo2zjs: drivers and foomatic wrappers on PATH for foomatic-rip.
+missing=""
+for prog in foo2zjs foo2xqx foo2qpdl foo2lava foo2hiperc foo2hp foo2hbpl2 foo2ddst \
+  foo2zjs-wrapper foo2xqx-wrapper foo2qpdl-wrapper foo2hp2600-wrapper foo2zjs-pstops; do
+  server_exec "test -x /usr/bin/$prog" || missing="$missing $prog"
+done
+expect_eq "foo2zjs drivers and wrappers are installed" "$missing" ""
+
+foo2zjs_count="$(server_exec 'ls /usr/share/cups/model/foo2zjs/*.ppd.gz 2>/dev/null | wc -l' || echo 0)"
+if [ "${foo2zjs_count:-0}" -ge 90 ]; then
+  ok "foo2zjs PPD set installed ($foo2zjs_count)"
+else
+  bad "foo2zjs PPD set looks truncated (got $foo2zjs_count, want >= 90)"
+fi
+
 for ppd in \
   /usr/share/cups/model/samsung/ml2240.ppd \
+  /usr/share/cups/model/samsung/ml2160.ppd \
+  /usr/share/cups/model/samsung/clp300.ppd \
   /usr/share/cups/model/dell/1100.ppd \
+  /usr/share/cups/model/foo2zjs/HP-LaserJet_1020.ppd.gz \
+  /usr/share/ppd/HP/hp-officejet_pro_8600.ppd.gz \
   /usr/share/cups/model/lw4xl.ppd \
   /usr/share/cups/model/lw450.ppd \
   /usr/share/cups/model/kyocera/Kyocera_FS-1040GDI.ppd \

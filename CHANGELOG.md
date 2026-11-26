@@ -2,14 +2,21 @@
 
 ## [1.3.8] — 2026-11-26
 
-- Add the SpliX driver (Alpine `splix` package, 2.0.1) for older Samsung,
-  Xerox, Dell, Lexmark and Toshiba SPL/QPDL laser printers such as the Samsung
-  ML-1510/ML-1610/ML-2010/ML-2240, SCX-4200 and the Xerox Phaser 3117/3124.
-  These printers understand neither PCL nor PostScript and were not covered by
-  Gutenprint. Their models now appear in the add-printer list as, for example,
+- Add the SpliX 2.0.1 driver, built with JBIG support, for Samsung, Xerox,
+  Dell, Lexmark and Toshiba SPL/QPDL laser printers such as the Samsung
+  ML-1510/ML-2010/ML-2160/ML-2240, SCX-4200, CLP-300/315 and CLX-3160 and the
+  Xerox Phaser 3117/6110. Models appear as, for example,
   "Samsung ML-2240, 2.0.0".
-- Add smoke-test checks for the SpliX filters, their runtime dependencies and
-  sample PPDs.
+- Add HPLIP 3.26 (`hplip`, `hplip-ppd`): the hpcups filter, the `hp` backend
+  and PPDs for HP LaserJet, OfficeJet, DeskJet and Envy printers. Models that
+  need HP's closed-source plugin (for example LaserJet 1018/1020) are not
+  supported by hpcups; use foo2zjs for those.
+- Add foo2zjs (20200505) for ZjStream/XQX/HIPERC/LAVAFLOW/QPDL host-based
+  printers: HP LaserJet 1018/1020/P1005-P1008/P1102/M1005/M1132, Color
+  LaserJet 1600/2600n/CP1025, Konica Minolta magicolor, Oki C3xx/C5xx,
+  Samsung CLP/CLX, Xerox Phaser 6110/6115/6121 and more. Models appear as,
+  for example, "HP LaserJet 1020 Foomatic/foo2zjs-z1 (recommended)".
+- Add smoke-test checks for the new filters, binaries and PPDs.
 
 ## [1.3.7] — 2026-11-07
 

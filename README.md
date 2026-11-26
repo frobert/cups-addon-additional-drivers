@@ -147,12 +147,19 @@ Brother host-based (GDI) lasers that speak neither PCL nor PostScript (for
 example HL-2130, HL-2140, HL-1110, DCP-7030/7055) are covered by the bundled
 open-source brlaser driver: pick **Brother <model>, using brlaser**.
 
-Older Samsung, Xerox, Dell, Lexmark and Toshiba lasers that use the SPL/QPDL
-language (for example Samsung ML-1510, ML-1610, ML-2010, ML-2240, ML-2510, SCX-4200,
-Xerox Phaser 3117/3124, Dell 1100/1110) are covered by the bundled SpliX
-driver: pick the entry named after the model with SpliX's version, for example
-**Samsung ML-2240, 2.0.0**. The color Samsung CLP/CLX models need SpliX's
-JBIG support, which the Alpine package does not include.
+Further bundled drivers for host-based and older printers:
+
+| Driver | Covers | Pick in the add-printer list |
+| --- | --- | --- |
+| SpliX 2.0.1 (with JBIG) | Samsung ML/SCX/CLP/CLX, Xerox Phaser 3117–3160/6110, Dell 1100/1110, Lexmark X215 (SPL/QPDL) | **Samsung ML-2240, 2.0.0** |
+| HPLIP 3.26 (hpcups) | HP LaserJet, OfficeJet, DeskJet, Envy | **HP Officejet Pro 8600, hpcups 3.26.6** |
+| foo2zjs | HP LaserJet 1018/1020/P1005–P1008/P1102/M1005/M1132, Color LaserJet 1600/2600n/CP1025, Konica Minolta magicolor, Oki C3xx/C5xx, Samsung CLP/CLX, Xerox Phaser 6110/6115/6121 | **HP LaserJet 1020 Foomatic/foo2zjs-z1 (recommended)** |
+
+Models that need HP's closed-source plugin (for example LaserJet 1018/1020)
+do not work with hpcups; use the foo2zjs entry instead. Some of those
+printers (LaserJet 1000/1005/1018/1020, P1005–P1008, P1505) also need a
+firmware file sent at power-on. The app does not upload it automatically (it
+needs a host udev hotplug rule), so those models may not print.
 
 For printers Gutenprint does not cover, supply a `.deb` through
 `printer_driver_deb` (place the file in the app config folder, `/config`) or use
